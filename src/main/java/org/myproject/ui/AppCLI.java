@@ -28,29 +28,18 @@ public class AppCLI implements CommandLineRunner {
             printMenu();
             String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1":
-                    addProduct();
-                    break;
-                case "2":
-                    viewProducts();
-                    break;
-                case "3":
-                    searchProduct();
-                    break;
-                case "4":
-                    updateProduct();
-                    break;
-                case "5":
-                    //deleteProduct();
-                    break;
-                case "6":
+                case "1" -> addProduct();
+                case "2" -> viewProducts();
+                case "3" -> searchProduct();
+                case "4" -> updateProduct();
+                case "5" -> deleteProduct();
+                case "6" -> {
                     if (confirmAction("Are you sure you want to exit? (Y/N): ")) {
                         System.out.println("Exiting Program.");
                         System.exit(0);
                     }
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
             }
             pauseForUser();
         }
@@ -177,6 +166,21 @@ public class AppCLI implements CommandLineRunner {
             System.out.println("\nProduct updated successfully!\n");
         } else {
             System.out.println("Product not found.");
+        }
+    }
+
+    private void deleteProduct() {
+        int deleteId = promptForInt("Enter Product ID to delete: ");
+        Optional<Product> optProduct = inventoryService.getProductById(deleteId);
+        if (!optProduct.isPresent()) {
+            System.out.println("Product not found.");
+            return;
+        }
+        if (confirmAction("Are you sure you want to delete this product? (Y/N): ")) {
+            inventoryService.deleteProduct(deleteId);
+            System.out.println("Product deleted successfully.");
+        } else {
+            System.out.println("Deletion cancelled.");
         }
     }
 
