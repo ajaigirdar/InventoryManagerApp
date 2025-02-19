@@ -52,6 +52,13 @@ public class InventoryService {
         }
     }
 
+    public void deleteProduct(Integer productId) {
+        if (productRepository.existsById(productId)) {
+            productRepository.deleteById(productId);
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
 
 
     public Optional<Product> getProductById(Integer productId) {
