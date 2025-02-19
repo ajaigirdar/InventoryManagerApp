@@ -9,13 +9,19 @@ import java.util.List;
 import java.util.Optional;
 @Service
 public class InventoryService {
+
+    // The repository that accesses the database
     @Autowired
     private ProductRepository productRepository;
 
+
+    // Retrieve all products from the database
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    // Add a new product to the inventory.
+    // Checks first if a product with the same ID already exists.
     public void addProduct(Product product) {
         if (productRepository.existsById(product.getProductId())) {
             System.out.println("Product with ID " + product.getProductId() + " already exists.");
@@ -24,6 +30,8 @@ public class InventoryService {
         }
     }
 
+    // Update an existing product
+    // Checks if the product exists before saving the changes.
     public void updateProduct(Product product) {
         if (productRepository.existsById(product.getProductId())) {
             productRepository.save(product);
@@ -32,6 +40,10 @@ public class InventoryService {
         }
     }
 
+
+    // Search for a product by a search term.
+    // If the search term is a number, it is treated as a product ID.
+    // Otherwise, it searches by product name
     public Optional<Product> searchProduct(String searchTerm) {
 
         // If it is a number, we assume the user is searching by product ID.
@@ -52,6 +64,8 @@ public class InventoryService {
         }
     }
 
+    // Delete a product from the inventory.
+    // Checks if the product exists before attempting deletion.
     public void deleteProduct(Integer productId) {
         if (productRepository.existsById(productId)) {
             productRepository.deleteById(productId);
@@ -60,7 +74,7 @@ public class InventoryService {
         }
     }
 
-
+    // Retrieve a product by its ID
     public Optional<Product> getProductById(Integer productId) {
         return productRepository.findById(productId);
     }

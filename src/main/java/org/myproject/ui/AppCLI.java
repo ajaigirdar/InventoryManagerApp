@@ -13,17 +13,23 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
 
+
+// AppCLI provides a command-line interface for the Inventory Manager application.
+// It handles user input, displays a menu, and calls methods from the InventoryService.
 @Component
 public class AppCLI implements CommandLineRunner {
 
     @Autowired
     private InventoryService inventoryService;
 
+    // Scanner for reading user input from the console
     private final Scanner scanner = new Scanner(System.in);
 
     @Override
     public void run(String... args) {
         boolean exit = false;
+
+        // Main loop: display menu and process user choices until the user exits
         while (!exit) {
             printMenu();
             String choice = scanner.nextLine().trim();
@@ -46,6 +52,8 @@ public class AppCLI implements CommandLineRunner {
         scanner.close();
     }
 
+
+    // Prints the main menu options to the console
     private void printMenu() {
         System.out.println("\n===== Inventory Manager =====");
         System.out.println("1. Add Product");
@@ -57,10 +65,14 @@ public class AppCLI implements CommandLineRunner {
         System.out.print("Enter your choice: ");
     }
 
+
+    // Prompts the user to add a new product.
+    // If an expiry date is provided, a PerishableProduct is created.
+    // Otherwise, a standard Product is created.
     private void addProduct() {
         System.out.println("\n===== Add Product =====");
 
-        // Prompt for product ID
+        // Prompt for product ID until a unique one is provided
         Integer productId;
         while (true) {
             productId = promptForInt("Enter Product ID: ");
@@ -78,19 +90,21 @@ public class AppCLI implements CommandLineRunner {
 
         if (expiryDate != null) {
 
-            // When an expiry date is provided, create a PerishableProduct.
+            // Create a perishable product if an expiry date is provided
             PerishableProduct perishableProduct = new PerishableProduct(productId, productName, quantity, price, expiryDate.toLocalDate());
             inventoryService.addProduct(perishableProduct);
             System.out.println("Perishable product added successfully.");
 
         } else {
-            // When no expiry date is provided, create a standard Product.
+            // Create a standard product if no expiry date is provided
             Product product = new Product(productId, productName, quantity, price);
             inventoryService.addProduct(product);
             System.out.println("Product added successfully.");
         }
     }
 
+
+    // Displays all products in the inventory
     private void viewProducts() {
         System.out.println("\n===== Inventory Manager =====");
         System.out.println("ID    | Name           | Quantity | Price");
@@ -105,6 +119,8 @@ public class AppCLI implements CommandLineRunner {
         System.out.println("---------------------------------------------");
     }
 
+
+    // Searches for a product by ID or name and displays the result
     private void searchProduct() {
         System.out.println("\n===== Search Product =====");
         String searchTerm = promptForString("Enter Product ID or Name: ");
@@ -117,6 +133,8 @@ public class AppCLI implements CommandLineRunner {
                     p.getProductName(),
                     p.getQuantity(),
                     p.getPrice());
+
+            // If the product is perishable, display its expiry date
             if (p instanceof PerishableProduct) {
                 PerishableProduct pp = (PerishableProduct) p;
                 if (pp.getExpiryDate() != null) {
@@ -129,6 +147,9 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
+
+    // Updates an existing product's details.
+    // Prompts the user for new quantity, new price, and (if applicable) a new expiry date.
     private void updateProduct() {
         System.out.println("\n===== Update Product =====");
         int updateId = promptForInt("Enter Product ID: ");
@@ -148,6 +169,7 @@ public class AppCLI implements CommandLineRunner {
             System.out.println();
             System.out.println();
 
+            // Prompt for new values; if the user presses Enter, keep the current value.
             int newQty = promptForOptionalInt("Enter New Quantity (or press Enter to skip): ", p.getQuantity());
             BigDecimal newPrice = promptForOptionalBigDecimal("Enter New Price (or press Enter to skip): ", p.getPrice());
             p.setQuantity(newQty);
@@ -169,6 +191,7 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
+    // Deletes a product from the inventory after confirming with the user
     private void deleteProduct() {
         int deleteId = promptForInt("Enter Product ID to delete: ");
         Optional<Product> optProduct = inventoryService.getProductById(deleteId);
@@ -184,6 +207,8 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
+
+    // Helper method: Pauses the program and waits for the user to press Enter before continuing
     private void pauseForUser() {
         System.out.println("Press Enter to return to the main menu...");
         scanner.nextLine();
