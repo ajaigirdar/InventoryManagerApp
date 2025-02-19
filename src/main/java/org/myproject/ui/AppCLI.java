@@ -35,7 +35,7 @@ public class AppCLI implements CommandLineRunner {
                     viewProducts();
                     break;
                 case "3":
-                    //searchProduct();
+                    searchProduct();
                     break;
                 case "4":
                     updateProduct();
@@ -116,6 +116,30 @@ public class AppCLI implements CommandLineRunner {
         System.out.println("---------------------------------------------");
     }
 
+    private void searchProduct() {
+        System.out.println("\n===== Search Product =====");
+        String searchTerm = promptForString("Enter Product ID or Name: ");
+        Optional<Product> result = inventoryService.searchProduct(searchTerm);
+        if (result.isPresent()) {
+            Product p = result.get();
+            System.out.println("\nProduct Found:");
+            System.out.printf("ID: %d%nName: %s%nQuantity: %d%nPrice: $%.2f%n",
+                    p.getProductId(),
+                    p.getProductName(),
+                    p.getQuantity(),
+                    p.getPrice());
+            if (p instanceof PerishableProduct) {
+                PerishableProduct pp = (PerishableProduct) p;
+                if (pp.getExpiryDate() != null) {
+                    System.out.println("Expiry Date: " + pp.getExpiryDate());
+                }
+            }
+            System.out.println();
+        } else {
+            System.out.println("\nProduct not found!");
+        }
+    }
+
     private void updateProduct() {
         System.out.println("\n===== Update Product =====");
         int updateId = promptForInt("Enter Product ID: ");
@@ -155,8 +179,6 @@ public class AppCLI implements CommandLineRunner {
             System.out.println("Product not found.");
         }
     }
-
-
 
     private void pauseForUser() {
         System.out.println("Press Enter to return to the main menu...");
@@ -205,6 +227,7 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
+    // Helper method: prompt for an optional BigDecimal. Returns currentValue if input is blank.
     private BigDecimal promptForOptionalBigDecimal(String prompt, BigDecimal currentValue) {
         System.out.print(prompt);
         String input = scanner.nextLine().trim();
@@ -219,9 +242,6 @@ public class AppCLI implements CommandLineRunner {
             }
         }
     }
-
-
-
 
     // Helper method: prompt for a non-empty string.
     private String promptForString(String prompt) {
