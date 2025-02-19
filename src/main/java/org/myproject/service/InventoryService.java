@@ -32,6 +32,27 @@ public class InventoryService {
         }
     }
 
+    public Optional<Product> searchProduct(String searchTerm) {
+
+        // If it is a number, we assume the user is searching by product ID.
+        try {
+            // Try to convert the search term to an integer.
+            Integer id = Integer.parseInt(searchTerm);
+
+            return productRepository.findById(id);
+        } catch (NumberFormatException e) {
+            // If the conversion fails, then the search term is not a number.
+            // and we assume the user is searching by product name.
+            // We get a list of all products, then check each product's name.
+            return productRepository.findAll().stream()
+                    // For each product, check if its name matches the search term
+                    .filter(product -> product.getProductName().equalsIgnoreCase(searchTerm))
+                    // Return the first matching product (if any)
+                    .findFirst();
+        }
+    }
+
+
 
     public Optional<Product> getProductById(Integer productId) {
         return productRepository.findById(productId);
