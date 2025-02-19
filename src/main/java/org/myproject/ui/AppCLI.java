@@ -32,7 +32,7 @@ public class AppCLI implements CommandLineRunner {
                     addProduct();
                     break;
                 case "2":
-                    //viewProducts();
+                    viewProducts();
                     break;
                 case "3":
                     //searchProduct();
@@ -101,6 +101,21 @@ public class AppCLI implements CommandLineRunner {
             System.out.println("Product added successfully.");
         }
     }
+
+    private void viewProducts() {
+        System.out.println("\n===== Inventory Manager =====");
+        System.out.println("ID    | Name           | Quantity | Price");
+        System.out.println("---------------------------------------------");
+        for (Product p : inventoryService.getAllProducts()) {
+            System.out.printf("%-5d | %-14s | %-8d | $%.2f%n",
+                    p.getProductId(),
+                    p.getProductName(),
+                    p.getQuantity(),
+                    p.getPrice());
+        }
+        System.out.println("---------------------------------------------");
+    }
+
 
 
     private void pauseForUser() {
