@@ -24,6 +24,14 @@ public class InventoryService {
         }
     }
 
+    public void updateProduct(Product product) {
+        if (productRepository.existsById(product.getProductId())) {
+            productRepository.save(product);
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
+
 
     public Optional<Product> getProductById(Integer productId) {
         return productRepository.findById(productId);

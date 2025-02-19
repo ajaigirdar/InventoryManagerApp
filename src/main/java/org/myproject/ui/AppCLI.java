@@ -38,7 +38,7 @@ public class AppCLI implements CommandLineRunner {
                     //searchProduct();
                     break;
                 case "4":
-                    //updateProduct();
+                    updateProduct();
                     break;
                 case "5":
                     //deleteProduct();
@@ -116,6 +116,46 @@ public class AppCLI implements CommandLineRunner {
         System.out.println("---------------------------------------------");
     }
 
+    private void updateProduct() {
+        System.out.println("\n===== Update Product =====");
+        int updateId = promptForInt("Enter Product ID: ");
+        Optional<Product> optProduct = inventoryService.getProductById(updateId);
+
+        if (optProduct.isPresent()) {
+            Product p = optProduct.get();
+            System.out.println("\nCurrent Details:");
+            System.out.println("Name: " + p.getProductName());
+            System.out.println("Quantity: " + p.getQuantity());
+            System.out.printf("Price: $%.2f%n", p.getPrice());
+            if (p instanceof PerishableProduct) {
+                PerishableProduct pp = (PerishableProduct) p;
+                System.out.println("Expiry Date: " + pp.getExpiryDate());
+            }
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+            int newQty = promptForOptionalInt("Enter New Quantity (or press Enter to skip): ", p.getQuantity());
+            BigDecimal newPrice = promptForOptionalBigDecimal("Enter New Price (or press Enter to skip): ", p.getPrice());
+            p.setQuantity(newQty);
+            p.setPrice(newPrice);
+
+            if (p instanceof PerishableProduct) {
+                PerishableProduct pp = (PerishableProduct) p;
+                System.out.print("Enter New Expiry Date (YYYY-MM-DD) (or press Enter to skip): ");
+                String expiryInput = scanner.nextLine().trim();
+                if (!expiryInput.isEmpty()) {
+                    pp.setExpiryDate(LocalDate.parse(expiryInput));
+                }
+            }
+
+            inventoryService.updateProduct(p);
+            System.out.println("\nProduct updated successfully!\n");
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
+
 
 
     private void pauseForUser() {
@@ -148,6 +188,38 @@ public class AppCLI implements CommandLineRunner {
             }
         }
     }
+
+    // Helper method: prompt for an optional integer. Returns currentValue if input is blank.
+    private int promptForOptionalInt(String prompt, int currentValue) {
+        System.out.print(prompt);
+        String input = scanner.nextLine().trim();
+        if (input.isEmpty()) {
+            return currentValue;
+        } else {
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Using current value: " + currentValue);
+                return currentValue;
+            }
+        }
+    }
+
+    private BigDecimal promptForOptionalBigDecimal(String prompt, BigDecimal currentValue) {
+        System.out.print(prompt);
+        String input = scanner.nextLine().trim();
+        if (input.isEmpty()) {
+            return currentValue;
+        } else {
+            try {
+                return new BigDecimal(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Using current value: " + currentValue);
+                return currentValue;
+            }
+        }
+    }
+
 
 
 
