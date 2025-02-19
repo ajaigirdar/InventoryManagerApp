@@ -71,7 +71,7 @@ public class AppCLI implements CommandLineRunner {
     private void addProduct() {
         System.out.println("\n===== Add Product =====");
 
-        // Prompt for product ID (as required)
+        // Prompt for product ID
         Integer productId;
         while (true) {
             productId = promptForInt("Enter Product ID: ");
@@ -88,10 +88,12 @@ public class AppCLI implements CommandLineRunner {
         Date expiryDate = promptForDate("Enter Expiry Date (yyyy-mm-dd) or leave blank: ");
 
         if (expiryDate != null) {
+
             // When an expiry date is provided, create a PerishableProduct.
             PerishableProduct perishableProduct = new PerishableProduct(productId, productName, quantity, price, expiryDate.toLocalDate());
             inventoryService.addProduct(perishableProduct);
             System.out.println("Perishable product added successfully.");
+
         } else {
             // When no expiry date is provided, create a standard Product.
             Product product = new Product(productId, productName, quantity, price);
@@ -119,22 +121,6 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
-    // Helper method: prompt for an optional integer. Returns currentValue if input is blank.
-    private int promptForOptionalInt(String prompt, int currentValue) {
-        System.out.print(prompt);
-        String input = scanner.nextLine().trim();
-        if (input.isEmpty()) {
-            return currentValue;
-        } else {
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Using current value: " + currentValue);
-                return currentValue;
-            }
-        }
-    }
-
     // Helper method: prompt for BigDecimal with validation.
     private BigDecimal promptForBigDecimal(String prompt) {
         while (true) {
@@ -148,21 +134,7 @@ public class AppCLI implements CommandLineRunner {
         }
     }
 
-    // Helper method: prompt for an optional BigDecimal. Returns currentValue if input is blank.
-    private BigDecimal promptForOptionalBigDecimal(String prompt, BigDecimal currentValue) {
-        System.out.print(prompt);
-        String input = scanner.nextLine().trim();
-        if (input.isEmpty()) {
-            return currentValue;
-        } else {
-            try {
-                return new BigDecimal(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Using current value: " + currentValue);
-                return currentValue;
-            }
-        }
-    }
+
 
     // Helper method: prompt for a non-empty string.
     private String promptForString(String prompt) {
