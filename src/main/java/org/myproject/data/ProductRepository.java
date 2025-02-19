@@ -1,17 +1,10 @@
 package org.myproject.data;
 
-public class ProductRepository {
+import org.myproject.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    /*
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-         INTERFACE ProductRepository EXTENDS JpaRepository<Product, Integer>
-
-           methods:
-           - findAll(): List<Product>
-           - findById(Integer): Optional<Product>
-           - save(Product): Product
-           - deleteById(Integer)
-           - existsById(Integer): boolean
-
-     */
 }
