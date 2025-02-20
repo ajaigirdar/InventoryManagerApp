@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 // The following annotation tells Spring Boot to replace your real DataSource with an embedded one for testing.
-// If you have H2 on the classpath, Spring Boot will use it.
 public class ProductRepositoryTest {
 
     @Autowired
