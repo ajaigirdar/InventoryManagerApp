@@ -30,6 +30,42 @@ single-table inheritance), and basic input validation.
 - **Maven**
 - **MySQL Database**
 
+## Project Structure
+
+````
+
+InventoryManager/
+│── src/
+│ ├── main/
+│ ├── ├──java/
+│ │   │  ├──org/
+│ │   │  │  ├── myproject/
+│ │   │  │  │   ├── data/
+│ │   │  │  │   │   ├── ProductRepository.java
+│ │   │  │  │   ├── model/
+│ │   │  │  │   │   ├── Product.java
+│ │   │  │  │   │   ├── PerishableProduct.java
+│ │   │  │  │   ├── service/
+│ │   │  │  │   │   ├── InventoryService.java
+│ │   │  │  │   ├── ui/
+│ │   │  │  │   │   ├── AppCLI.java
+│ │   │  │  │   ├── InventoryManagerApp.java 
+│── tests/
+│ ├── java/
+│ │   │  ├──org/
+│ │   │  │  ├── myproject/
+│ │   │  │  │   ├── data/
+│ │   │  │  │   │   ├── ProductRepositoryTest.java
+│ │   │  │  │   ├── model/
+│ │   │  │  │   │   ├── ProductTest.java
+│ │   │  │  │   │   ├── PerishableProductTest.java
+│ │   │  │  │   ├── service/
+│ │   │  │  │   │   ├── InventoryServiceTest.java
+│ │   │  │  │   ├── ui/
+│── pom.xml (Maven)
+
+````
+
 ## Setup
 
 1. **Database Configuration:**
